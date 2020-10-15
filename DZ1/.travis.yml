@@ -4,11 +4,11 @@ sudo:     required  # используем Virtual Machine (а не Docker conta
 language: c
 os:
     - linux
-    - osx
+
 
 compiler:
     - gcc
-    - clang
+
 
 addons:
     apt:
@@ -26,30 +26,28 @@ env:
     - TARGET_CPU=amd64 BUILD_CONFIGURATION=Release
     - TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
     - TARGET_CPU=x86 BUILD_CONFIGURATION=Release
+    - CODECOV_TOKEN="eb569977-dbde-4d56-a03d-bc385555c187"
 
 
-matrix:
-    exclude:
-        # вручную исключим ненужные элементы из матрицы сборки:
-        - os:       osx
-          compiler: gcc
 
-        - os:  osx
-          env: TARGET_CPU=x86 BUILD_CONFIGURATION=Debug
 
-        - os:  osx
-          env: TARGET_CPU=x86 BUILD_CONFIGURATION=Release
+before_script:
+    - cd DZ1/Google_tests
+    - git submodule add -f https://github.com/google/googletest.git
+    - cd ..
+
 
 
 script:
     # скрипт сборки и тестирования проекта:
-    - cd DZ1
+
     - mkdir build
     - cd build
     - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION -DTARGET_CPU=$TARGET_CPU -DCMAKE_C_FLAGS="--coverage" -DCMAKE_CXX_FLAGS="--coverage"
     - cmake --build .
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "${CC_FOR_BUILD}" =~ gcc$ ]]; then valgrind --tool=memcheck --leak-check=yes ./Google_tests/Google_Tests_run; fi
-    - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "${CC_FOR_BUILD}" =~ gcc$пше ]]; then lcov --capture --directory . --output-file coverage.info; fi
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "${CC_FOR_BUILD}" =~ gcc$ ]]; then lcov --capture --directory . --output-file coverage.info; fi
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [[ "${CC_FOR_BUILD}" =~ gcc$ ]]; then bash <(curl -s https://codecov.io/bash); fi
     - cd ..
     - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cppcheck --enable=warning,performance,information *.c; fi
+    - rm -r Google_tests/googletest
