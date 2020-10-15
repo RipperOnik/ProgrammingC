@@ -3,7 +3,7 @@ project(DZ1 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(DZ1 main.c)
+add_executable(DZ1 main.c contract.c)
 
 add_subdirectory(Google_tests)
 

@@ -24,7 +24,7 @@ struct Contract {
     Time date_conclusion;
 };
 
-void getContractInfo(Contract *contract, char* buffer);
+void get_contract_info(const Contract* contract, char* buffer);
 
 void search_best(Contract *list, size_t n);
 

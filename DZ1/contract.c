@@ -4,15 +4,19 @@
 #include "contract.h"
 
 
-void getContractInfo(Contract* contract, char* buffer){
-    mktime(&contract->date_conclusion);
-    sprintf(buffer,"Вид: %s, Сумма: %u, Контрагент: %s, Наличие дополнительных соглашений: %s, Дата заключения: %s\n",
-           contract->kind, contract->sum, contract->counterparty, (contract->presence_extra_agreement) ? "Да": "Нет",
-           asctime(&contract->date_conclusion));
+void get_contract_info(const Contract* const contract, char* buffer){
+    if (contract != NULL && buffer != NULL) {
+        mktime(&contract->date_conclusion);
+        sprintf(buffer,
+                "Вид: %s, Сумма: %u, Контрагент: %s, Наличие дополнительных соглашений: %s, Дата заключения: %s\n",
+                contract->kind, contract->sum, contract->counterparty,
+                (contract->presence_extra_agreement) ? "Да" : "Нет",
+                asctime(&contract->date_conclusion));
+    }
 }
 
 
-void search_best(Contract* list, size_t n){
+void search_best(Contract* const list,const size_t n){
     for (size_t i = 0; i < n; i++){
         size_t max_index = i;
         for (size_t j = i+1; j < n; j++){
@@ -26,7 +30,7 @@ void search_best(Contract* list, size_t n){
     }
 }
 
-void input_data(Contract* list, size_t size){
+void input_data(Contract* const list, const size_t size){
 
     for (size_t i = 0; i < size; i++){
         printf("Введите вид договора: ");
